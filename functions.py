@@ -5,12 +5,23 @@ import numpy as np
 
 #Transformation du CSV d'entrée en liste de KW
 def kw_to_vec(file) :
+    """
+    Fonction simple pour transformer un CSV contenant des mots-clés en liste de mots-clés
+    :param file: un fichier CSV contenant des mots clés
+    :return: une liste de mots clés
+    """
     kw_list = pd.read_csv(file, sep = ";")
     kw_vec = list(kw_list["kw"])
     return kw_vec
 
 #Récupération de l'ensemble des trends, 1 à 1
 def get_data_trend(kw_list, country) :
+    """
+    La fonction qui récupère les TRENDS 1 à 1 pour chaque mot-clé présent dans la liste
+    :param kw_list: liste de mots clés
+    :param country: le pays ou se fait la recherche
+    :return: une liste de dataframe - 1 DF par mot-clé
+    """
     country = country
     datalist = [] #objet à retourner
 
@@ -32,6 +43,11 @@ def get_data_trend(kw_list, country) :
 
 #Prediction Prophet pour chaque trend
 def prophet_kws(trends) :
+    """
+    Prédiction de l'année suivante, via la lib FB Prophet
+    :param trends: une liste de dataframe contenant les trends pour 1 mot clé
+    :return: une liste de dataframe
+    """
     datalist = [] # la liste de DF que l'on va return en fin de process
 
     ###Debut du process
@@ -53,6 +69,5 @@ def prophet_kws(trends) :
         kw_forecast = kw_forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper', 'keyword', 'segment']] # on conserve les colonnes dont on a besoin
         kw_forecast = kw_forecast.merge(kw_timeseries, on='ds', how='left') # on récupère le trend (y) d'origine
         datalist.append(kw_forecast) #on feed notre liste
-
     return datalist
 
