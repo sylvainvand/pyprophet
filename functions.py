@@ -2,6 +2,7 @@ import pandas as pd
 from pytrends.request import TrendReq
 from fbprophet import Prophet
 import numpy as np
+from scipy.signal import find_peaks
 
 #Transformation du CSV d'entrée en liste de KW
 def kw_to_vec(file) :
@@ -70,4 +71,16 @@ def prophet_kws(trends) :
         kw_forecast = kw_forecast.merge(kw_timeseries, on='ds', how='left') # on récupère le trend (y) d'origine
         datalist.append(kw_forecast) #on feed notre liste
     return datalist
+
+#Obtenir les max
+def get_max(list_kws, nbmax) :
+    datalist = []
+
+    for df in list_kws :
+        kw_forecast = df[df['segment'] == 'forecast']
+        time_series = kw_forecast['yhat']
+        indices = find_peaks(time_series)[0]
+        datalist.append(indices)
+    return datalist
+
 
