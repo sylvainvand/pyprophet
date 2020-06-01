@@ -84,6 +84,12 @@ def prophet_kws(trends):
 
 # Obtenir les max
 def get_max(list_kws, nbmax):
+    """
+
+    :param list_kws:
+    :param nbmax:
+    :return:
+    """
     datalist = []
     i = nbmax
     for df in list_kws:
